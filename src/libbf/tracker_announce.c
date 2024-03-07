@@ -19,7 +19,6 @@
 
 #include "tracker_announce.h"
 #include "url.h"
-#include "tracker_udp.h"
 #include "tracker_http.h"
 #include "log.h"
 
@@ -105,9 +104,7 @@ tracker_announce_resp_t *tracker_announce(const char *urlstr, tracker_announce_r
     if((sockfd = tracker_connect(url)) < 0)
         goto fail_connect;
 
-    if(url->protocol == PROTOCOL_UDP) {
-        ret = tracker_udp_announce(sockfd, request);
-    }else if(url->protocol == PROTOCOL_HTTP) {
+    if(url->protocol == PROTOCOL_HTTP) {
         ret = tracker_http_announce(sockfd, url, request);
     }
 
