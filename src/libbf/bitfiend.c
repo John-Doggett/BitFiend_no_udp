@@ -20,7 +20,6 @@
 #include "bitfiend.h"
 #include "list.h"
 #include "peer_id.h"
-#include "peer_listener.h"
 #include "bencode.h"
 #include "torrent.h"
 #include "torrent_file.h"
@@ -39,7 +38,6 @@
 #include <signal.h>
 #include <errno.h>
 
-static pthread_t         s_peer_listener;
 static pthread_t         s_reaper;
 static const uint16_t    s_port = 6889; 
 static pthread_mutex_t   s_torrents_lock = PTHREAD_MUTEX_INITIALIZER;
@@ -67,9 +65,6 @@ int bitfiend_init(const char *logfile)
     s_unassoc_peerthreads = list_init();
 
     if(stats_init())
-        goto fail_init;
-
-    if(peer_listener_create(&s_peer_listener, &s_port))
         goto fail_init;
 
     reaper_arg_t *arg = malloc(sizeof(reaper_arg_t));    
@@ -137,8 +132,7 @@ int bitfiend_shutdown(void)
     void *tret;
 
     /* Thread join order matters here.
-     * First, join the peer_listener so no new unassociated peers can be added.
-     * Next, join unassociated peers, after which a torrent's peer_connections
+     * First, join unassociated peers, after which a torrent's peer_connections
      * list can only grow if its' tracker_thread gives it peers.
      * Now, iterate over all torrents. Join the tracker thread first. Now no new peer 
      * threads can be spawned which can touch the torrent. Join the torrent's peers last.
@@ -147,10 +141,6 @@ int bitfiend_shutdown(void)
     if(pthread_cancel(s_reaper))
         ret = BITFIEND_FAILURE;
     pthread_join(s_reaper, &tret);
-
-    if(pthread_cancel(s_peer_listener))
-        ret = BITFIEND_FAILURE;
-    pthread_join(s_peer_listener, &tret);
 
     size_t listsize;
     pthread_mutex_lock(&s_unassoc_peerthreads_lock);
