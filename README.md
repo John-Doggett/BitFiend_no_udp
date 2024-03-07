@@ -29,3 +29,7 @@ present.
 UDP support and the peer listening port have been removed from the base BitFiend source code. 
 Thus only TCP connectings to peers are allowed, and only http or https connecitons to trackers are allowed. No TCP ports are binded for listening. 
 If using torsocks, real ip is never leaked.
+
+Torsocks will output tcp errors if it cannot bind to a peer (this is normal behavior in bittorrent protocol). Pipe standard errors to dev/null.
+
+torsocks ./bitfiend 2>/dev/null
