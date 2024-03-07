@@ -38,8 +38,6 @@ url_t *url_from_str(const char *str)
         ret->protocol = PROTOCOL_HTTP;
     else if(!strncmp(buff, "https:", 6))
         ret->protocol = PROTOCOL_HTTPS;
-    else if(!strncmp(buff, "udp://", 6))
-        ret->protocol = PROTOCOL_UDP;
     else
         ret->protocol = PROTOCOL_UNKNOWN;
 

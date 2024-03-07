@@ -26,8 +26,7 @@ typedef enum
 {
 	PROTOCOL_UNKNOWN = -1,
 	PROTOCOL_HTTP,
-    PROTOCOL_HTTPS,
-	PROTOCOL_UDP
+    PROTOCOL_HTTPS
 }protocol_t;
 
 typedef struct url{
