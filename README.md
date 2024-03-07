@@ -23,3 +23,9 @@ present.
 ## Example BitFiend Session ##
 
 <img src="./img/session.png"/>
+
+## Torsocks compatibility ##
+
+UDP support and the peer listening port have been removed from the base BitFiend source code. 
+Thus only TCP connectings to peers are allowed, and only http or https connecitons to trackers are allowed. No TCP ports are binded for listening. 
+If using torsocks, real ip is never leaked.
